@@ -1,1 +1,1 @@
-SICCv2
+SICC
