@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TEST DE SCANEO</title>
+	<script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+
+</head>
+<body>
+
+	<!--
+		<video id="preview"></video>
+	-->
+	<script type="text/javascript">
+
+
+		let scanner = new Instascan.Scanner(
+		{
+			video: document.getElementById('preview')
+		}
+		);
+
+		scanner.addListener('scan', function(dato) {
+			var x = dato;
+
+			$( document ).ready(function() {
+				var x = dato;
+				enviardato(dato)
+			})
+
+		});
+
+        //CAMARA
+        Instascan.Camera.getCameras().then(cameras => {
+        	if(cameras.length > 0){
+        		scanner.start(cameras[0]);
+        	} else {
+        		console.error("CAMARA NO DISPONIBLE");
+        	}
+        });
+
+
+		function enviardato(dato,compania){
+
+			$.ajax({
+				data: { rut : dato},
+				url: './Datos/AsistenciaDAO.php',
+				type: 'post',
+
+				success: function(response){
+					console.log(dato);
+
+					const accion = response;
+					console.log(accion);
+
+					if (accion == 1) { //insert
+						Swal.fire({
+					    text:'Se ha registrado la hora de entrada',
+							icon:'success',
+					    showConfirmButton: false,
+					    timer: 2500
+					  }).then(function() {
+					      window.location = window.location;
+					  });
+					} else if (accion == 2) { //update
+						Swal.fire({
+					    text:'Se ha registrado la hora de Salida',
+							icon:'success',
+					    showConfirmButton: false,
+					    timer: 2500
+					  }).then(function() {
+					      window.location = window.location;
+					  });
+					}
+
+				}
+			})
+
+		}
+
+   </script>
+
+</body>
+</html>
